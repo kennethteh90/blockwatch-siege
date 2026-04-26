@@ -1,0 +1,5 @@
+# blockwatch:debug/status
+# Prints current game state to the caller's chat.
+# Usage: /function blockwatch:debug/status
+
+tellraw @s [{"text":"── Blockwatch Status ──\n","color":"aqua"},{"text":"State    : ","color":"gray"},{"score":{"name":"#state","objective":"bw.state"},"color":"white"},{"text":"\nWave     : ","color":"gray"},{"score":{"name":"#wave","objective":"bw.wave"},"color":"white"},{"text":"\nCastle HP: ","color":"gray"},{"score":{"name":"#castle_hp","objective":"bw.castle_hp"},"color":"white"},{"text":"\nTimer    : ","color":"gray"},{"score":{"name":"#timer","objective":"bw.timer"},"color":"white"},{"text":" ticks\n","color":"gray"},{"text":"Gold     : ","color":"gray"},{"score":{"name":"@s","objective":"bw.gold"},"color":"yellow"},{"text":"g\n","color":"gray"},{"text":"sp_idx   : ","color":"dark_gray"},{"score":{"name":"#sp_idx","objective":"bw.tmp"},"color":"gray"},{"text":"  sp_done: ","color":"dark_gray"},{"score":{"name":"#sp_done","objective":"bw.tmp"},"color":"gray"},{"text":"  leaks: ","color":"dark_gray"},{"score":{"name":"#wave_leaks","objective":"bw.tmp"},"color":"gray"}]
