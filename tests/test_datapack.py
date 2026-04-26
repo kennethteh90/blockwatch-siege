@@ -125,5 +125,30 @@ class WaveCoverage(unittest.TestCase):
                 )
 
 
+class ParticipantScoping(unittest.TestCase):
+    def test_global_gold_operations_are_scoped_to_match_participants(self):
+        allowed_tags = ("bw.playing", "bw.placing", "bw.selling", "bw.upgrading")
+        allowed_paths = {FUNCTIONS_ROOT / "state" / "reset_match.mcfunction"}
+        failures = []
+
+        for path, lineno, line in _mcfunction_lines():
+            if "@a" not in line or "bw.gold" not in line:
+                continue
+
+            if path in allowed_paths:
+                continue
+
+            if any(f"tag={tag}" in line for tag in allowed_tags):
+                continue
+
+            failures.append(
+                f"  {path.relative_to(FUNCTIONS_ROOT)}:{lineno}: "
+                f"gold-affecting selector is not scoped to an approved player tag"
+            )
+
+        if failures:
+            self.fail("Unscoped gold selectors:\n" + "\n".join(failures))
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

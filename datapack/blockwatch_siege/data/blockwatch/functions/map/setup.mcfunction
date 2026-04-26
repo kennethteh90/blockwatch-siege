@@ -13,4 +13,4 @@ weather clear
 kill @e[tag=bw.tower]
 function blockwatch:map/pads
 
-tellraw @a {"text":"[Siege] Map ready. /trigger bw.place 1 (Arrow 50g)  2 (Frost 75g)  3 (Bomb 100g). Sell: /trigger bw.sell 1","color":"gray"}
+tellraw @a[tag=bw.playing] {"text":"[Siege] Map ready. /trigger bw.place 1 (Arrow 50g)  2 (Frost 75g)  3 (Bomb 100g). Sell: /trigger bw.sell 1","color":"gray"}

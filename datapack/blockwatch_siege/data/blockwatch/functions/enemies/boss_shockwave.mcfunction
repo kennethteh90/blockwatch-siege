@@ -9,4 +9,4 @@ particle minecraft:cloud             ~ ~0.5 ~ 3 0 3 0.05 50
 
 execute as @e[tag=bw.tower,distance=..6] run scoreboard players add @s bw.cd 20
 
-tellraw @a [{"text":"[Siege] ","color":"gold"},{"text":"Boss shockwave! ","color":"red","bold":true},{"text":"Nearby towers disrupted for 1s.","color":"red"}]
+tellraw @a[tag=bw.playing] [{"text":"[Siege] ","color":"gold"},{"text":"Boss shockwave! ","color":"red","bold":true},{"text":"Nearby towers disrupted for 1s.","color":"red"}]
