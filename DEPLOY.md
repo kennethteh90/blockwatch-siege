@@ -104,6 +104,14 @@ blockwatch_siege.zip
       ...
 ```
 
+For a public release build without developer debug functions:
+
+```bash
+./scripts/build_release.sh
+```
+
+That script writes `dist/blockwatch_siege-release.zip` and strips `data/blockwatch/functions/debug/` from the packaged archive.
+
 ---
 
 ## Coordinate Setup (Custom Maps)

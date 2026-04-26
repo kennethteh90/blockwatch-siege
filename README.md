@@ -11,6 +11,7 @@ Wave-based tower defense minigame for Minecraft Java Edition 1.20.4.
 
 See [DEPLOY.md](DEPLOY.md) for full installation instructions.  
 See [TESTING.md](TESTING.md) for the test checklist and debug command reference.
+See [ROADMAP.md](ROADMAP.md) for the staged improvement plan.
 
 ## Project Layout
 
