@@ -36,7 +36,8 @@
 #  t.intermiss       200       Intermission duration (10 s)
 #  t.endgame         200       Victory/defeat display before lobby return
 #  gold.start        100       Starting gold per player
-#  castle.max        20        Starting castle HP
+#  castle.max        20        Base shared castle HP
+#  castle.per_player 10        Extra HP for each participant after the first
 #  reward.base       25g       Flat gold reward each intermission
 #  reward.wave       5g/wave   Scales with completed wave number
 #  reward.bonus      50g       Flawless (zero-leak) bonus

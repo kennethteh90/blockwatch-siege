@@ -100,3 +100,6 @@ under the `bw.cfg` section.
 
 Players spend from their own `bw.gold` balances. Kill rewards and intermission payouts are granted
 equally to current match participants only.
+
+Shared castle HP scales with participant count at match start:
+`#castle.max + (#players - 1) * #castle.per_player`

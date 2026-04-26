@@ -150,5 +150,25 @@ class ParticipantScoping(unittest.TestCase):
             self.fail("Unscoped gold selectors:\n" + "\n".join(failures))
 
 
+    def test_player_count_scaling_is_configured(self):
+        setup_text = SETUP_BOARDS.read_text()
+        self.assertIn(
+            "scoreboard players set #castle.per_player bw.cfg",
+            setup_text,
+            "#castle.per_player should be defined in setup_scoreboards",
+        )
+
+        new_match = (FUNCTIONS_ROOT / "state" / "new_match.mcfunction").read_text()
+        self.assertIn(
+            "#castle.per_player",
+            new_match,
+            "new_match should apply the per-player castle HP scaling",
+        )
+        self.assertIn(
+            "#players bw.tmp",
+            new_match,
+            "new_match should count active match participants",
+        )
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
