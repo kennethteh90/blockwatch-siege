@@ -8,25 +8,25 @@ execute if score #state bw.state matches 2 if score #timer bw.timer matches ..0 
 
 # ── Pad placement trigger (state 2 only) ──────────────────────────────────────
 # value 1=Arrow, 2=Frost, 3=Bomb — re-enabled every tick so players can repeat
-execute if score #state bw.state matches 2 run scoreboard players enable @a bw.place
-execute if score #state bw.state matches 2 as @a if score @s bw.place matches 1.. at @s run function blockwatch:map/pad_interact
-execute if score #state bw.state matches 2 as @a if score @s bw.place matches 1.. run scoreboard players reset @s bw.place
+execute if score #state bw.state matches 2 run scoreboard players enable @a[tag=bw.playing] bw.place
+execute if score #state bw.state matches 2 as @a[tag=bw.playing] if score @s bw.place matches 1.. at @s run function blockwatch:map/pad_interact
+execute if score #state bw.state matches 2 as @a[tag=bw.playing] if score @s bw.place matches 1.. run scoreboard players reset @s bw.place
 
 # ── Sell trigger (states 2 and 4 — any time between waves) ────────────────────
-execute if score #state bw.state matches 2 run scoreboard players enable @a bw.sell
-execute if score #state bw.state matches 4 run scoreboard players enable @a bw.sell
-execute if score #state bw.state matches 2 as @a if score @s bw.sell matches 1.. at @s run function blockwatch:towers/sell
-execute if score #state bw.state matches 4 as @a if score @s bw.sell matches 1.. at @s run function blockwatch:towers/sell
-execute if score #state bw.state matches 2 as @a if score @s bw.sell matches 1.. run scoreboard players reset @s bw.sell
-execute if score #state bw.state matches 4 as @a if score @s bw.sell matches 1.. run scoreboard players reset @s bw.sell
+execute if score #state bw.state matches 2 run scoreboard players enable @a[tag=bw.playing] bw.sell
+execute if score #state bw.state matches 4 run scoreboard players enable @a[tag=bw.playing] bw.sell
+execute if score #state bw.state matches 2 as @a[tag=bw.playing] if score @s bw.sell matches 1.. at @s run function blockwatch:towers/sell
+execute if score #state bw.state matches 4 as @a[tag=bw.playing] if score @s bw.sell matches 1.. at @s run function blockwatch:towers/sell
+execute if score #state bw.state matches 2 as @a[tag=bw.playing] if score @s bw.sell matches 1.. run scoreboard players reset @s bw.sell
+execute if score #state bw.state matches 4 as @a[tag=bw.playing] if score @s bw.sell matches 1.. run scoreboard players reset @s bw.sell
 
 # ── Upgrade trigger (states 2 and 4 — any time between waves) ─────────────────
-execute if score #state bw.state matches 2 run scoreboard players enable @a bw.upgrade
-execute if score #state bw.state matches 4 run scoreboard players enable @a bw.upgrade
-execute if score #state bw.state matches 2 as @a if score @s bw.upgrade matches 1.. at @s run function blockwatch:towers/upgrade
-execute if score #state bw.state matches 4 as @a if score @s bw.upgrade matches 1.. at @s run function blockwatch:towers/upgrade
-execute if score #state bw.state matches 2 as @a if score @s bw.upgrade matches 1.. run scoreboard players reset @s bw.upgrade
-execute if score #state bw.state matches 4 as @a if score @s bw.upgrade matches 1.. run scoreboard players reset @s bw.upgrade
+execute if score #state bw.state matches 2 run scoreboard players enable @a[tag=bw.playing] bw.upgrade
+execute if score #state bw.state matches 4 run scoreboard players enable @a[tag=bw.playing] bw.upgrade
+execute if score #state bw.state matches 2 as @a[tag=bw.playing] if score @s bw.upgrade matches 1.. at @s run function blockwatch:towers/upgrade
+execute if score #state bw.state matches 4 as @a[tag=bw.playing] if score @s bw.upgrade matches 1.. at @s run function blockwatch:towers/upgrade
+execute if score #state bw.state matches 2 as @a[tag=bw.playing] if score @s bw.upgrade matches 1.. run scoreboard players reset @s bw.upgrade
+execute if score #state bw.state matches 4 as @a[tag=bw.playing] if score @s bw.upgrade matches 1.. run scoreboard players reset @s bw.upgrade
 
 # ── Combat phase (state 3) ─────────────────────────────────────────────────────
 execute if score #state bw.state matches 3 run function blockwatch:waves/spawner
@@ -34,11 +34,11 @@ execute if score #state bw.state matches 3 run function blockwatch:towers/tick
 execute if score #state bw.state matches 3 run function blockwatch:enemies/tick
 
 # ── Player abilities (state 3 — combat only) ──────────────────────────────────
-execute if score #state bw.state matches 3 run scoreboard players enable @a bw.ability
-execute if score #state bw.state matches 3 as @a if score @s bw.ability matches 1.. at @s run function blockwatch:abilities/use
-execute if score #state bw.state matches 3 as @a if score @s bw.ability matches 1.. run scoreboard players reset @s bw.ability
-execute if score #state bw.state matches 3 as @a if score @s bw.airstrike_cd matches 1.. run scoreboard players remove @s bw.airstrike_cd 1
-execute if score #state bw.state matches 3 as @a if score @s bw.freeze_cd matches 1.. run scoreboard players remove @s bw.freeze_cd 1
+execute if score #state bw.state matches 3 run scoreboard players enable @a[tag=bw.playing] bw.ability
+execute if score #state bw.state matches 3 as @a[tag=bw.playing] if score @s bw.ability matches 1.. at @s run function blockwatch:abilities/use
+execute if score #state bw.state matches 3 as @a[tag=bw.playing] if score @s bw.ability matches 1.. run scoreboard players reset @s bw.ability
+execute if score #state bw.state matches 3 as @a[tag=bw.playing] if score @s bw.airstrike_cd matches 1.. run scoreboard players remove @s bw.airstrike_cd 1
+execute if score #state bw.state matches 3 as @a[tag=bw.playing] if score @s bw.freeze_cd matches 1.. run scoreboard players remove @s bw.freeze_cd 1
 
 execute if score #state bw.state matches 3 run function blockwatch:waves/check_complete
 

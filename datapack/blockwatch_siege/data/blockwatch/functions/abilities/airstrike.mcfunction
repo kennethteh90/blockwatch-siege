@@ -10,4 +10,4 @@ execute as @e[tag=bw.enemy] if score @s bw.hp matches ..0 run function blockwatc
 
 scoreboard players operation @s bw.airstrike_cd = #cd.airstrike bw.cfg
 particle minecraft:explosion_emitter ~ ~2 ~ 0 0 0 0 3
-tellraw @a [{"text":"[Siege] ","color":"gold"},{"text":"Airstrike! ","color":"aqua","bold":true},{"text":"All enemies hit for 20 damage.","color":"aqua"}]
+tellraw @a[tag=bw.playing] [{"text":"[Siege] ","color":"gold"},{"text":"Airstrike! ","color":"aqua","bold":true},{"text":"All enemies hit for 20 damage.","color":"aqua"}]
