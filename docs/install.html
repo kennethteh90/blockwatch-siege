@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Install — Blockwatch: Siege</title>
+<meta name="description" content="Install Blockwatch: Siege as a datapack in your Minecraft Java 1.20.4 world. Singleplayer, dedicated server, or zip distribution." />
+<link rel="stylesheet" href="styles.css" />
+<style>
+  .page-head {
+    padding: 80px 0 56px;
+  }
+  .page-head h1 {
+    margin-bottom: 18px;
+  }
+  .page-head p.lede {
+    color: var(--ink-soft);
+    font-size: 17px;
+    max-width: 60ch;
+    margin: 0;
+  }
+
+  .install-grid {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 56px;
+    padding-bottom: 96px;
+  }
+  @media (max-width: 800px) {
+    .install-grid { grid-template-columns: 1fr; gap: 32px; }
+  }
+
+  .toc {
+    position: sticky;
+    top: 84px;
+    align-self: start;
+    border-left: 1px solid var(--line);
+    padding: 4px 0 4px 18px;
+  }
+  .toc h4 {
+    color: var(--ink-mute);
+    font-family: var(--display);
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    margin-bottom: 16px;
+  }
+  .toc a {
+    display: block;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--ink-soft);
+    padding: 6px 0;
+    border: 0;
+  }
+  .toc a:hover { color: var(--ember); }
+
+  /* method tabs */
+  .method-tabs {
+    display: flex;
+    gap: 2px;
+    margin-bottom: 32px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    width: fit-content;
+    box-shadow: var(--shadow-hard);
+  }
+  .method-tabs button {
+    background: transparent;
+    border: 0;
+    padding: 12px 18px;
+    font-family: var(--display);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: var(--ink-mute);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .method-tabs button:hover { color: var(--ink); }
+  .method-tabs button.is-active {
+    background: var(--ember);
+    color: #1a0e06;
+  }
+
+  .method-panel { display: none; }
+  .method-panel.is-active { display: block; }
+
+  .step {
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: 20px;
+    padding: 24px 0;
+    border-top: 1px solid var(--line-soft);
+  }
+  .step:first-of-type { border-top: 0; padding-top: 0; }
+
+  .step-num {
+    width: 36px;
+    height: 36px;
+    background: var(--ember);
+    color: #1a0e06;
+    font-family: var(--display);
+    font-size: 13px;
+    display: grid;
+    place-items: center;
+    box-shadow: 2px 2px 0 0 rgba(0,0,0,0.5);
+  }
+  .step-body h3 {
+    font-family: var(--display);
+    font-size: 13px;
+    margin-bottom: 12px;
+    line-height: 1.4;
+  }
+  .step-body p {
+    color: var(--ink-soft);
+    font-size: 14.5px;
+    margin: 0 0 12px;
+  }
+
+  /* path table */
+  .path-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--mono);
+    font-size: 13px;
+    margin: 12px 0 4px;
+    border: 1px solid var(--line);
+  }
+  .path-table th, .path-table td {
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .path-table th {
+    background: var(--surface);
+    color: var(--ember);
+    font-weight: 500;
+    font-family: var(--display);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+  }
+  .path-table tr:last-child td { border-bottom: 0; }
+  .path-table td:first-child { color: var(--ink-mute); width: 100px; }
+
+  /* code with copy button */
+  .code-block {
+    position: relative;
+  }
+  .code-block .copy {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
+    font-family: var(--display);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    padding: 6px 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .code-block .copy:hover { color: var(--ember); border-color: var(--ember); }
+  .code-block .copy.is-copied { background: var(--ember); color: #1a0e06; border-color: var(--ember); }
+
+  .callout {
+    background: var(--surface);
+    border-left: 3px solid var(--ember);
+    padding: 18px 22px;
+    margin: 16px 0;
+    font-size: 14px;
+    color: var(--ink-soft);
+  }
+  .callout strong { color: var(--ember); font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em; display: block; margin-bottom: 4px; }
+
+  .checklist {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    padding: 28px 32px;
+    box-shadow: var(--shadow-hard);
+    margin: 32px 0 0;
+  }
+  .checklist h3 {
+    font-family: var(--display);
+    font-size: 12px;
+    margin-bottom: 18px;
+    color: var(--ember);
+    letter-spacing: 0.1em;
+  }
+  .checklist ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-family: var(--mono);
+    font-size: 13px;
+  }
+  .checklist li {
+    padding: 8px 0 8px 28px;
+    position: relative;
+    color: var(--ink-soft);
+    border-bottom: 1px dashed var(--line-soft);
+  }
+  .checklist li:last-child { border-bottom: 0; }
+  .checklist li::before {
+    content: "▢";
+    position: absolute;
+    left: 0;
+    top: 8px;
+    color: var(--ember);
+  }
+
+  section.section { padding: 64px 0; }
+  section.section h2 {
+    font-size: 18px;
+    margin-bottom: 32px;
+  }
+
+  /* gamerules grid */
+  .gamerules {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin: 12px 0;
+  }
+  @media (max-width: 600px) { .gamerules { grid-template-columns: 1fr; } }
+  .gamerules .rule {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    padding: 10px 14px;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--ember-soft);
+  }
+</style>
+</head>
+<body>
+
+<!-- nav -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="brand">
+      <span class="brand-mark"></span>
+      <span>BLOCKWATCH:&nbsp;SIEGE</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Overview</a>
+      <a href="install.html" class="is-active">Install</a>
+      <a href="how-to-play.html">How to play</a>
+      <a href="https://github.com/kennethteh90/blockwatch-siege" class="cta">★ GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<header class="page-head">
+  <div class="wrap">
+    <p class="eyebrow">Setup · ~5 minutes</p>
+    <h1>Install &amp; deploy.</h1>
+    <p class="lede">
+      Blockwatch: Siege is a vanilla datapack — no client mods, no Forge, no Fabric.
+      Pick the install method that matches where you play, copy one folder, run <code>/reload</code>, and you're in.
+    </p>
+  </div>
+</header>
+
+<div class="wrap install-grid">
+  <aside class="toc">
+    <h4>// On this page</h4>
+    <a href="#requirements">Requirements</a>
+    <a href="#install">Install methods</a>
+    <a href="#first-match">First match</a>
+    <a href="#gamerules">Recommended gamerules</a>
+    <a href="#troubleshoot">Troubleshooting</a>
+    <a href="#uninstall">Uninstall</a>
+  </aside>
+
+  <main>
+    <!-- requirements -->
+    <section class="section" id="requirements" style="padding-top: 0;">
+      <h2>What you need</h2>
+      <table class="path-table">
+        <tr><td>Edition</td><td>Minecraft Java Edition</td></tr>
+        <tr><td>Version</td><td>1.20.4 (pack_format 26)</td></tr>
+        <tr><td>Players</td><td>1–4 cooperative</td></tr>
+        <tr><td>World</td><td>Flat world recommended (default coords assume Y=64)</td></tr>
+      </table>
+      <div class="callout">
+        <strong>Newer Minecraft?</strong>
+        Update <code>pack.mcmeta</code>'s <code>pack_format</code> to match. See the Minecraft Wiki's pack-format table.
+      </div>
+    </section>
+
+    <!-- install methods -->
+    <section class="section" id="install">
+      <h2>Pick your install method</h2>
+
+      <div class="method-tabs" role="tablist">
+        <button class="is-active" data-method="single">Singleplayer</button>
+        <button data-method="server">Server</button>
+        <button data-method="zip">Zip share</button>
+      </div>
+
+      <!-- singleplayer -->
+      <div class="method-panel is-active" data-panel="single">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <h3>Find your world folder.</h3>
+            <p>Open the directory for your operating system:</p>
+            <table class="path-table">
+              <tr><td>Windows</td><td>%APPDATA%\.minecraft\saves\&lt;WorldName&gt;\</td></tr>
+              <tr><td>macOS</td><td>~/Library/Application&nbsp;Support/minecraft/saves/&lt;WorldName&gt;/</td></tr>
+              <tr><td>Linux</td><td>~/.minecraft/saves/&lt;WorldName&gt;/</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <h3>Copy the datapack folder.</h3>
+            <p>Drop <code>blockwatch_siege/</code> into the world's <code>datapacks/</code> folder. The structure should look like this:</p>
+            <div class="code-block">
+              <button class="copy" data-copy="1">COPY</button>
+<pre><code>&lt;WorldName&gt;/
+  datapacks/
+    blockwatch_siege/
+      pack.mcmeta
+      data/
+        ...</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <h3>Reload the world.</h3>
+            <p>Open the world (or run <code>/reload</code> if it's already open). You should see this message in chat:</p>
+            <div class="code-block">
+              <button class="copy" data-copy="1">COPY</button>
+<pre><code>[Blockwatch: Siege] Reloaded. v0.1.0</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <h3>Start your first match.</h3>
+            <div class="code-block">
+              <button class="copy" data-copy="1">COPY</button>
+<pre><code>/function blockwatch:state/new_match</code></pre>
+            </div>
+            <p>Eight build pads will appear. Head to <a href="how-to-play.html">How to play</a> to learn the controls.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- server -->
+      <div class="method-panel" data-panel="server">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <h3>Copy to the server's world folder.</h3>
+            <div class="code-block">
+              <button class="copy" data-copy="1">COPY</button>
+<pre><code>&lt;server-root&gt;/
+  world/
+    datapacks/
+      blockwatch_siege/   ← copy here</code></pre>
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <h3>Reload from console or chat.</h3>
+            <p>From the server console:</p>
+            <div class="code-block">
+              <button class="copy" data-copy="1">COPY</button>
+<pre><code>reload confirm</code></pre>
+            </div>
+            <p>Or from any operator account in-game: <code>/reload</code>. A full server restart also works.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <h3>Start the match.</h3>
+            <div class="code-block">
+              <button class="copy" data-copy="1">COPY</button>
+<pre><code>/function blockwatch:state/new_match</code></pre>
+            </div>
+            <p>The datapack is co-op compatible by default — gold is shared across <code>@a</code>, castle HP is global. Increase <code>#castle.max bw.cfg</code> for larger groups.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- zip -->
+      <div class="method-panel" data-panel="zip">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <h3>Zip the datapack folder.</h3>
+            <p>Navigate into <code>datapack/</code>, then zip <code>blockwatch_siege/</code>. The archive's root must contain <code>pack.mcmeta</code> directly — no extra nested folder.</p>
+            <div class="code-block">
+              <button class="copy" data-copy="1">COPY</button>
+<pre><code>blockwatch_siege.zip
+  blockwatch_siege/
+    pack.mcmeta
+    data/
+      ...</code></pre>
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <h3>Drop the zip into <code>datapacks/</code>.</h3>
+            <p>Recipients drop the <code>.zip</code> directly into their world's <code>datapacks/</code> folder. Minecraft reads zipped datapacks natively — no extraction needed.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <h3>Reload.</h3>
+            <p>Same as the other methods: <code>/reload</code> in-game, look for the v0.1.0 message in chat.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- first match checklist -->
+    <section class="section" id="first-match">
+      <h2>First-match checklist</h2>
+      <p style="color: var(--ink-soft); margin: 0 0 12px;">After installing, run through this list to confirm everything's wired up.</p>
+      <div class="checklist">
+        <h3>// CHECK_LIST</h3>
+        <ul>
+          <li>Chat shows <code>[Blockwatch: Siege] Reloaded. v0.1.0</code></li>
+          <li>Run <code>/function blockwatch:state/new_match</code> — 8 pads appear</li>
+          <li>Build timer counts down in the sidebar</li>
+          <li>Place a tower: <code>/trigger bw.place set 1</code> on a pad</li>
+          <li>Wait for combat (or jump ahead with <code>/function blockwatch:state/set_combat</code>)</li>
+          <li>Enemies spawn and walk toward the castle</li>
+          <li>Towers fire automatically</li>
+          <li>Wave clears, intermission triggers, gold is awarded</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- gamerules -->
+    <section class="section" id="gamerules">
+      <h2>Recommended gamerules</h2>
+      <p style="color: var(--ink-soft); margin: 0 0 18px;">These are applied automatically by <code>map/setup.mcfunction</code>, but running them up front keeps things clean from world load.</p>
+      <div class="gamerules">
+        <div class="rule">/gamerule doDaylightCycle false</div>
+        <div class="rule">/gamerule doWeatherCycle false</div>
+        <div class="rule">/gamerule doMobSpawning false</div>
+        <div class="rule">/gamerule doFireTick false</div>
+        <div class="rule">/gamerule naturalRegeneration false</div>
+        <div class="rule">/gamerule keepInventory true</div>
+      </div>
+    </section>
+
+    <!-- troubleshoot -->
+    <section class="section" id="troubleshoot">
+      <h2>Troubleshooting</h2>
+      <div class="callout">
+        <strong>// No reload message in chat</strong>
+        Confirm <code>pack.mcmeta</code> is at the root of <code>blockwatch_siege/</code>, not nested inside another folder. Then run <code>/datapack list</code> to verify the pack loaded.
+      </div>
+      <div class="callout">
+        <strong>// Pads spawn at strange coordinates</strong>
+        The defaults assume a flat world at Y=64. For custom maps, run <code>/function blockwatch:map/config</code> to print every hardcoded coordinate, then edit <code>map/pads.mcfunction</code> and the lane move files.
+      </div>
+      <div class="callout">
+        <strong>// Towers won't place</strong>
+        You must be standing on a pad and not have a tower already there. Pads with towers show a different label. The trigger is one-shot — re-enable with <code>/scoreboard players enable @s bw.place</code> if it gets stuck.
+      </div>
+    </section>
+
+    <!-- uninstall -->
+    <section class="section" id="uninstall">
+      <h2>Uninstall</h2>
+      <p style="color: var(--ink-soft);">Delete the datapack folder, run <code>/reload</code>, then optionally clean up scoreboards and lingering entities:</p>
+      <div class="code-block">
+        <button class="copy" data-copy="1">COPY</button>
+<pre><code>/scoreboard objectives remove bw.state
+/scoreboard objectives remove bw.wave
+/scoreboard objectives remove bw.castle_hp
+/scoreboard objectives remove bw.gold
+/scoreboard objectives remove bw.cfg
+/kill @e[tag=bw.enemy]
+/kill @e[tag=bw.tower]
+/kill @e[tag=bw.pad]</code></pre>
+      </div>
+      <p style="color: var(--ink-mute); font-family: var(--mono); font-size: 12px;">// see the repo's DEPLOY.md for the full list</p>
+    </section>
+  </main>
+</div>
+
+<footer>
+  <div class="wrap">
+    <p>BLOCKWATCH: SIEGE · v0.1.0 · made for friends &amp; flat worlds</p>
+    <div class="foot-links">
+      <a href="https://github.com/kennethteh90/blockwatch-siege">GitHub</a>
+      <a href="https://github.com/kennethteh90/blockwatch-siege/releases">Releases</a>
+      <a href="index.html">Overview</a>
+      <a href="how-to-play.html">Play</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // method tabs
+  document.querySelectorAll('.method-tabs button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const m = btn.dataset.method;
+      document.querySelectorAll('.method-tabs button').forEach(b => b.classList.toggle('is-active', b === btn));
+      document.querySelectorAll('.method-panel').forEach(p => p.classList.toggle('is-active', p.dataset.panel === m));
+    });
+  });
+
+  // copy buttons
+  document.querySelectorAll('[data-copy]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const code = btn.parentElement.querySelector('code').innerText;
+      try {
+        await navigator.clipboard.writeText(code);
+        btn.textContent = 'COPIED';
+        btn.classList.add('is-copied');
+        setTimeout(() => { btn.textContent = 'COPY'; btn.classList.remove('is-copied'); }, 1400);
+      } catch(e) {
+        btn.textContent = 'ERR';
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

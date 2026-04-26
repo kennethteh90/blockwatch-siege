@@ -1,0 +1,746 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Blockwatch: Siege — co-op tower defense for Minecraft Java</title>
+<meta name="description" content="A wave-based tower defense datapack for Minecraft Java 1.20.4. Build towers, hold the line, beat the boss with your friends." />
+<link rel="stylesheet" href="styles.css" />
+<style>
+  /* ---------- hero ---------- */
+  .hero {
+    padding: 120px 0 100px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 56px;
+    align-items: center;
+  }
+  @media (max-width: 900px) { .hero-grid { grid-template-columns: 1fr; gap: 40px; } }
+
+  .hero h1 {
+    margin: 0 0 28px;
+  }
+  .hero h1 .accent { color: var(--ember); }
+  .hero .lede {
+    font-size: 17px;
+    color: var(--ink-soft);
+    max-width: 52ch;
+    margin: 0 0 32px;
+    line-height: 1.65;
+  }
+  .hero-cta { display: flex; gap: 16px; flex-wrap: wrap; }
+
+  .hero-meta {
+    margin-top: 40px;
+    display: grid;
+    grid-template-columns: repeat(3, max-content);
+    gap: 28px 40px;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--ink-mute);
+  }
+  .hero-meta strong { color: var(--ink); display: block; font-weight: 500; font-size: 14px; }
+
+  /* hero diorama (pure CSS isometric tower of cubes) */
+  .diorama {
+    aspect-ratio: 1 / 1;
+    width: 100%;
+    max-width: 460px;
+    margin-left: auto;
+    position: relative;
+    transform-style: preserve-3d;
+  }
+  .diorama-frame {
+    position: absolute;
+    inset: 0;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-hard);
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px),
+      radial-gradient(circle at 30% 30%, rgba(238,124,58,0.10), transparent 60%);
+    background-size: 16px 16px, 16px 16px, 100% 100%;
+    overflow: hidden;
+  }
+  .diorama-label {
+    position: absolute;
+    top: 12px;
+    left: 14px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-dim);
+    letter-spacing: 0.1em;
+  }
+  .diorama-coords {
+    position: absolute;
+    bottom: 12px;
+    right: 14px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-dim);
+    letter-spacing: 0.06em;
+  }
+
+  /* iso scene */
+  .iso-scene {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+  }
+  .iso {
+    position: relative;
+    width: 220px;
+    height: 220px;
+    transform: rotateX(58deg) rotateZ(-45deg);
+    transform-style: preserve-3d;
+  }
+  .lane {
+    position: absolute;
+    width: 220px;
+    height: 22px;
+    background: #1c2330;
+    border: 1px solid #2a323e;
+  }
+  .lane.l1 { top: 70px; }
+  .lane.l2 { top: 130px; }
+  .pad {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: var(--surface-3);
+    border: 1px solid #3a4452;
+  }
+  /* simple "tower" cubes on pads */
+  .tower-cube {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    transform: translateZ(18px);
+  }
+  .tower-cube.a { background: var(--ember); box-shadow: 0 0 0 1px var(--ember-deep); }
+  .tower-cube.f { background: var(--frost); box-shadow: 0 0 0 1px #4a8aa9; }
+  .tower-cube.b { background: var(--gold); box-shadow: 0 0 0 1px #a87f1d; }
+  .castle {
+    position: absolute;
+    right: -6px;
+    top: 40px;
+    width: 36px;
+    height: 110px;
+    background: #3a4452;
+    border: 1px solid #4d5a6c;
+    transform: translateZ(28px);
+  }
+  .spawn {
+    position: absolute;
+    left: -6px;
+    top: 60px;
+    width: 18px;
+    height: 80px;
+    background: #1a1212;
+    border: 1px solid var(--ember-deep);
+    box-shadow: inset 0 0 8px var(--ember);
+  }
+  /* enemies on lanes */
+  .enemy {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: #b3392f;
+    transform: translateZ(14px);
+    animation: marching 5.5s linear infinite;
+  }
+  .enemy.l1.e1 { top: 75px; animation-delay: 0s; }
+  .enemy.l1.e2 { top: 75px; animation-delay: -1.6s; }
+  .enemy.l1.e3 { top: 75px; animation-delay: -3.4s; }
+  .enemy.l2.e1 { top: 135px; animation-delay: -0.8s; background: #c4554b; }
+  .enemy.l2.e2 { top: 135px; animation-delay: -2.6s; background: #c4554b; }
+
+  @keyframes marching {
+    0%   { left: 4px;   opacity: 0; }
+    8%   { opacity: 1; }
+    92%  { opacity: 1; }
+    100% { left: 200px; opacity: 0; }
+  }
+
+  /* arrow tracers from towers */
+  .tracer {
+    position: absolute;
+    height: 2px;
+    background: var(--ember);
+    transform-origin: left center;
+    opacity: 0;
+    animation: zip 1s ease-out infinite;
+    box-shadow: 0 0 8px var(--ember);
+  }
+  @keyframes zip {
+    0%   { opacity: 0; transform: scaleX(0.2); }
+    20%  { opacity: 1; }
+    60%  { opacity: 1; transform: scaleX(1); }
+    100% { opacity: 0; transform: scaleX(1); }
+  }
+
+  /* ---------- pitch ---------- */
+  .pitch-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 56px;
+  }
+  @media (max-width: 800px) { .pitch-grid { grid-template-columns: 1fr; } }
+  .pitch-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    padding: 28px;
+    box-shadow: var(--shadow-hard);
+  }
+  .pitch-card .num {
+    font-family: var(--display);
+    font-size: 12px;
+    color: var(--ember);
+    letter-spacing: 0.1em;
+    margin-bottom: 18px;
+    display: block;
+  }
+  .pitch-card h3 {
+    font-size: 14px;
+    line-height: 1.4;
+    margin-bottom: 12px;
+  }
+  .pitch-card p {
+    font-family: var(--sans);
+    color: var(--ink-soft);
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  /* ---------- towers ---------- */
+  .towers {
+    background: var(--surface);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 32px;
+    margin-bottom: 56px;
+    flex-wrap: wrap;
+  }
+  .section-head p {
+    color: var(--ink-soft);
+    max-width: 48ch;
+    margin: 0;
+  }
+
+  .tower-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  @media (max-width: 900px) { .tower-row { grid-template-columns: 1fr; } }
+
+  .tower-card {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    padding: 28px 24px 24px;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s;
+    box-shadow: var(--shadow-hard);
+    overflow: hidden;
+  }
+  .tower-card:hover,
+  .tower-card.is-open {
+    transform: translate(-3px, -3px);
+    box-shadow: 7px 7px 0 0 rgba(0,0,0,0.55);
+    border-color: var(--ember);
+  }
+  .tower-card.is-open { border-color: var(--ember); }
+
+  .tower-icon {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 22px;
+    position: relative;
+    image-rendering: pixelated;
+  }
+  /* arrow tower icon — stack of cubes with ember top */
+  .ti-arrow .top    { position: absolute; left: 16px; top: 0;  width: 32px; height: 16px; background: var(--ember); }
+  .ti-arrow .mid    { position: absolute; left: 12px; top: 16px; width: 40px; height: 16px; background: #4d5a6c; }
+  .ti-arrow .base   { position: absolute; left: 8px;  top: 32px; width: 48px; height: 32px; background: #2a323e; border-top: 2px solid #4d5a6c; }
+  .ti-arrow .arrow  { position: absolute; left: 30px; top: 4px; width: 18px; height: 4px; background: #1a0e06; }
+
+  /* frost tower icon */
+  .ti-frost .top  { position: absolute; left: 16px; top: 0;  width: 32px; height: 16px; background: var(--frost); }
+  .ti-frost .mid  { position: absolute; left: 12px; top: 16px; width: 40px; height: 16px; background: #4d5a6c; }
+  .ti-frost .base { position: absolute; left: 8px;  top: 32px; width: 48px; height: 32px; background: #2a323e; border-top: 2px solid #4d5a6c; }
+  .ti-frost .crystal { position: absolute; left: 28px; top: 4px; width: 8px; height: 8px; background: #c8e6f3; box-shadow: 12px 0 0 #c8e6f3; }
+
+  /* bomb tower icon */
+  .ti-bomb .top  { position: absolute; left: 16px; top: 0;  width: 32px; height: 16px; background: var(--gold); }
+  .ti-bomb .mid  { position: absolute; left: 12px; top: 16px; width: 40px; height: 16px; background: #4d5a6c; }
+  .ti-bomb .base { position: absolute; left: 8px;  top: 32px; width: 48px; height: 32px; background: #2a323e; border-top: 2px solid #4d5a6c; }
+  .ti-bomb .ball { position: absolute; left: 24px; top: 2px; width: 16px; height: 16px; background: #1a1212; }
+  .ti-bomb .fuse { position: absolute; left: 30px; top: -2px; width: 4px; height: 6px; background: var(--ember); }
+
+  .tower-card h3 {
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+  .tower-card .price {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--gold);
+    margin-bottom: 18px;
+  }
+
+  .tower-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px 16px;
+    font-family: var(--mono);
+    font-size: 12px;
+    margin-bottom: 16px;
+  }
+  .tower-stats .k { color: var(--ink-mute); }
+  .tower-stats .v { color: var(--ink); text-align: right; }
+
+  .tower-detail {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.32s ease;
+  }
+  .tower-detail > div {
+    overflow: hidden;
+    min-height: 0;
+  }
+  .tower-card.is-open .tower-detail {
+    grid-template-rows: 1fr;
+  }
+  .tower-detail-inner {
+    padding-top: 16px;
+    border-top: 1px dashed var(--line);
+    margin-top: 6px;
+  }
+  .tower-detail-inner p {
+    font-family: var(--sans);
+    color: var(--ink-soft);
+    font-size: 13.5px;
+    line-height: 1.6;
+    margin: 0 0 12px;
+  }
+  .tower-detail-inner .quote {
+    font-family: var(--mono);
+    color: var(--ember-soft);
+    font-size: 12px;
+    border-left: 2px solid var(--ember);
+    padding-left: 12px;
+    margin-top: 14px;
+  }
+
+  .tower-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-mute);
+  }
+  .tower-foot .open-hint::after {
+    content: " ▾";
+    color: var(--ember);
+  }
+  .tower-card.is-open .tower-foot .open-hint::after { content: " ▴"; }
+
+  /* ---------- enemies ---------- */
+  .enemies-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 900px) { .enemies-row { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 520px) { .enemies-row { grid-template-columns: 1fr; } }
+
+  .enemy-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    padding: 22px 20px;
+    box-shadow: var(--shadow-hard);
+    position: relative;
+  }
+  .enemy-card .label {
+    font-family: var(--display);
+    font-size: 12px;
+    margin-bottom: 18px;
+    color: var(--ink);
+  }
+  .enemy-card .pip {
+    width: 56px;
+    height: 56px;
+    margin-bottom: 16px;
+    position: relative;
+  }
+  .pip.walker { background: #6fa860; box-shadow: inset -8px -8px 0 #4f7a44, inset 8px 8px 0 #80c46d; }
+  .pip.runner { background: #8a4f7e; box-shadow: inset -8px -8px 0 #5e3357, inset 8px 8px 0 #a36398; }
+  .pip.brute  { background: #c8c4b8; box-shadow: inset -8px -8px 0 #8a877d, inset 8px 8px 0 #e0dccd; }
+  .pip.boss   { background: #b3392f; box-shadow: inset -8px -8px 0 #6f1f17, inset 8px 8px 0 #d6584c; }
+
+  .enemy-stats {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 6px 14px;
+    font-family: var(--mono);
+    font-size: 12px;
+  }
+  .enemy-stats .k { color: var(--ink-mute); }
+  .enemy-stats .v { color: var(--ink); }
+
+  .enemy-card .blurb {
+    font-family: var(--sans);
+    color: var(--ink-soft);
+    font-size: 13px;
+    margin: 14px 0 0;
+    line-height: 1.55;
+  }
+
+  /* ---------- closing CTA ---------- */
+  .closing {
+    text-align: center;
+    background: var(--surface);
+  }
+  .closing h2 { margin-bottom: 24px; }
+  .closing p { color: var(--ink-soft); max-width: 52ch; margin: 0 auto 32px; }
+  .closing-cta {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .closing .small {
+    margin-top: 28px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-mute);
+  }
+</style>
+</head>
+<body>
+
+<!-- nav -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="brand">
+      <span class="brand-mark"></span>
+      <span>BLOCKWATCH:&nbsp;SIEGE</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="is-active">Overview</a>
+      <a href="install.html">Install</a>
+      <a href="how-to-play.html">How to play</a>
+      <a href="https://github.com/kennethteh90/blockwatch-siege" class="cta">★ GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<!-- hero -->
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="eyebrow">Datapack · Minecraft Java 1.20.4</p>
+      <h1>Hold the line. <span class="accent">Defend the&nbsp;castle.</span></h1>
+      <p class="lede">
+        Blockwatch: Siege is a co-op tower defense minigame you drop into any Minecraft world.
+        Get a few friends in, place towers on the pads, and survive ten waves of zombies, spiders,
+        iron golems — and one very angry ravager.
+      </p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="https://github.com/kennethteh90/blockwatch-siege/releases/latest">
+          ▼ Download datapack
+        </a>
+        <a class="btn btn-secondary" href="install.html">Install guide</a>
+      </div>
+      <div class="hero-meta">
+        <div><strong>1–4</strong>players, co-op</div>
+        <div><strong>10 waves</strong>~20&nbsp;min match</div>
+        <div><strong>v0.1.0</strong>pack_format 26</div>
+      </div>
+    </div>
+
+    <div class="diorama" aria-hidden="true">
+      <div class="diorama-frame">
+        <span class="diorama-label">// LANE_VIEW · TOP-DOWN</span>
+        <div class="iso-scene">
+          <div class="iso">
+            <div class="lane l1"></div>
+            <div class="lane l2"></div>
+
+            <!-- pads with towers -->
+            <div class="pad" style="left: 30px;  top: 42px;"></div>
+            <div class="tower-cube a" style="left: 31px; top: 43px;"></div>
+
+            <div class="pad" style="left: 90px;  top: 42px;"></div>
+            <div class="tower-cube b" style="left: 91px; top: 43px;"></div>
+
+            <div class="pad" style="left: 150px; top: 42px;"></div>
+            <div class="tower-cube a" style="left: 151px; top: 43px;"></div>
+
+            <div class="pad" style="left: 60px;  top: 162px;"></div>
+            <div class="tower-cube f" style="left: 61px; top: 163px;"></div>
+
+            <div class="pad" style="left: 120px; top: 162px;"></div>
+            <div class="tower-cube a" style="left: 121px; top: 163px;"></div>
+
+            <div class="spawn"></div>
+            <div class="castle"></div>
+
+            <div class="enemy l1 e1"></div>
+            <div class="enemy l1 e2"></div>
+            <div class="enemy l1 e3"></div>
+            <div class="enemy l2 e1"></div>
+            <div class="enemy l2 e2"></div>
+          </div>
+        </div>
+        <span class="diorama-coords">X: 0 → 80 · Y: 64</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- pitch -->
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">The pitch</p>
+        <h2>A tower defense game,<br/>made entirely of commands.</h2>
+      </div>
+      <p>No mods. No client downloads. Just drop the datapack into your world's <code>datapacks/</code> folder, run <code>/reload</code>, and start a match. Your friends only need a vanilla 1.20.4 client.</p>
+    </div>
+
+    <div class="pitch-grid">
+      <div class="pitch-card">
+        <span class="num">01 / BUILD</span>
+        <h3>Place towers in 30 seconds.</h3>
+        <p>Eight build pads sit along two parallel lanes. Stand on a pad, run <code>/trigger bw.place 1</code> — Arrow, Frost, or Bomb. Plan your kill zones before the first wave marches.</p>
+      </div>
+      <div class="pitch-card">
+        <span class="num">02 / DEFEND</span>
+        <h3>Towers fire automatically.</h3>
+        <p>Combat is hands-off. Watch your placements light up enemies as they teleport down the lanes. Frost slows runners, Bomb shreds clusters, Arrow does the steady work.</p>
+      </div>
+      <div class="pitch-card">
+        <span class="num">03 / ESCALATE</span>
+        <h3>Ten waves. One boss.</h3>
+        <p>Earn gold each wave (more if you don't leak). Sell underperformers, reposition for dual-lane waves at 7+, and brace for the ravager that drops on wave 10.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- towers -->
+<section class="towers" id="towers">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Tower roster</p>
+        <h2>Three towers.<br/>Mix them well.</h2>
+      </div>
+      <p>Every tower fits a role. Click any card to read where it shines and where it falls flat.</p>
+    </div>
+
+    <div class="tower-row">
+      <!-- ARROW -->
+      <article class="tower-card" data-tower>
+        <div class="tower-icon ti-arrow" aria-hidden="true">
+          <span class="top"></span><span class="mid"></span><span class="base"></span><span class="arrow"></span>
+        </div>
+        <h3>Arrow Tower</h3>
+        <div class="price">cost 50g · sell 35g · trigger 1</div>
+        <div class="tower-stats">
+          <span class="k">range</span><span class="v">8 blk</span>
+          <span class="k">damage</span><span class="v">5 hp</span>
+          <span class="k">rate</span><span class="v">1.0 s</span>
+          <span class="k">target</span><span class="v">single</span>
+        </div>
+        <div class="tower-detail">
+          <div>
+            <div class="tower-detail-inner">
+              <p><strong>Best for:</strong> early waves where every gold piece counts, and as steady DPS through the late game. Cheap enough to stack two side-by-side on a pad pair.</p>
+              <p><strong>Watch out for:</strong> dense clusters — Arrow only hits one target per shot, so packs of Walkers will leak past a single tower.</p>
+              <p class="quote">"The workhorse. Build two early, keep them, never apologize."</p>
+            </div>
+          </div>
+        </div>
+        <div class="tower-foot">
+          <span class="tag ember">Tier 1 pick</span>
+          <span class="open-hint">details</span>
+        </div>
+      </article>
+
+      <!-- FROST -->
+      <article class="tower-card" data-tower>
+        <div class="tower-icon ti-frost" aria-hidden="true">
+          <span class="top"></span><span class="mid"></span><span class="base"></span><span class="crystal"></span>
+        </div>
+        <h3>Frost Tower</h3>
+        <div class="price">cost 75g · sell 52g · trigger 2</div>
+        <div class="tower-stats">
+          <span class="k">range</span><span class="v">6 blk</span>
+          <span class="k">damage</span><span class="v">3 hp</span>
+          <span class="k">rate</span><span class="v">1.25 s</span>
+          <span class="k">freeze</span><span class="v">3.0 s</span>
+        </div>
+        <div class="tower-detail">
+          <div>
+            <div class="tower-detail-inner">
+              <p><strong>Best for:</strong> neutralizing Runners, who are otherwise fast enough to slip past Arrow towers. A frozen enemy stops dead and waits for your other towers to delete it.</p>
+              <p><strong>Watch out for:</strong> low damage and short range — never run a lane on Frost alone. Pair it with Bomb behind, Arrow alongside.</p>
+              <p class="quote">"Frost makes everything else hit harder. It's force multiplier, not damage dealer."</p>
+            </div>
+          </div>
+        </div>
+        <div class="tower-foot">
+          <span class="tag frost">Crowd control</span>
+          <span class="open-hint">details</span>
+        </div>
+      </article>
+
+      <!-- BOMB -->
+      <article class="tower-card" data-tower>
+        <div class="tower-icon ti-bomb" aria-hidden="true">
+          <span class="fuse"></span><span class="ball"></span><span class="top"></span><span class="mid"></span><span class="base"></span>
+        </div>
+        <h3>Bomb Tower</h3>
+        <div class="price">cost 100g · sell 70g · trigger 3</div>
+        <div class="tower-stats">
+          <span class="k">range</span><span class="v">10 blk</span>
+          <span class="k">damage</span><span class="v">15 hp aoe</span>
+          <span class="k">rate</span><span class="v">3.0 s</span>
+          <span class="k">target</span><span class="v">all in range</span>
+        </div>
+        <div class="tower-detail">
+          <div>
+            <div class="tower-detail-inner">
+              <p><strong>Best for:</strong> dual-lane waves (7–10) and Brute clusters. One Bomb between the lanes can hit both at once. Bursts down the boss when paired with Frost lock-in.</p>
+              <p><strong>Watch out for:</strong> the 3-second reload. Solo Bombs get overrun between shots — always sandwich with Arrow for sustain.</p>
+              <p class="quote">"Place it dead-center and watch a wave evaporate. Never solo it."</p>
+            </div>
+          </div>
+        </div>
+        <div class="tower-foot">
+          <span class="tag gold">Burst &amp; AoE</span>
+          <span class="open-hint">details</span>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- enemies -->
+<section id="enemies">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Hostile mobs</p>
+        <h2>Know what's coming<br/>down the lane.</h2>
+      </div>
+      <p>Four enemy archetypes. The wave table mixes them in escalating combinations — by wave 7 you'll be defending both lanes at once.</p>
+    </div>
+
+    <div class="enemies-row">
+      <div class="enemy-card">
+        <div class="pip walker"></div>
+        <div class="label">WALKER</div>
+        <div class="enemy-stats">
+          <span class="k">hp</span><span class="v">20</span>
+          <span class="k">speed</span><span class="v">0.15 b/t</span>
+          <span class="k">first wave</span><span class="v">1</span>
+          <span class="k">role</span><span class="v">fodder</span>
+        </div>
+        <p class="blurb">A slow, predictable zombie. Cheap to delete with Arrow towers — but they come in piles.</p>
+      </div>
+      <div class="enemy-card">
+        <div class="pip runner"></div>
+        <div class="label">RUNNER</div>
+        <div class="enemy-stats">
+          <span class="k">hp</span><span class="v">15</span>
+          <span class="k">speed</span><span class="v">0.25 b/t</span>
+          <span class="k">first wave</span><span class="v">2</span>
+          <span class="k">role</span><span class="v">leaker</span>
+        </div>
+        <p class="blurb">Cave spider. Fast enough to slip past slow towers if you don't have Frost backing you up.</p>
+      </div>
+      <div class="enemy-card">
+        <div class="pip brute"></div>
+        <div class="label">BRUTE</div>
+        <div class="enemy-stats">
+          <span class="k">hp</span><span class="v">100</span>
+          <span class="k">speed</span><span class="v">0.08 b/t</span>
+          <span class="k">first wave</span><span class="v">3</span>
+          <span class="k">role</span><span class="v">tank</span>
+        </div>
+        <p class="blurb">Iron golem. Slow, but soaks five Arrow shots. Bomb burst is the answer.</p>
+      </div>
+      <div class="enemy-card">
+        <div class="pip boss"></div>
+        <div class="label">BOSS</div>
+        <div class="enemy-stats">
+          <span class="k">hp</span><span class="v">200</span>
+          <span class="k">speed</span><span class="v">0.06 b/t</span>
+          <span class="k">first wave</span><span class="v">10</span>
+          <span class="k">role</span><span class="v">finale</span>
+        </div>
+        <p class="blurb">Ravager. One per match, lane 1, wave 10. Frost lock + double Bomb is the standard kill.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- closing CTA -->
+<section class="closing">
+  <div class="wrap">
+    <p class="eyebrow">Ready to play</p>
+    <h2>Get your friends in a world.<br/>Defend the&nbsp;castle.</h2>
+    <p>The whole thing is one folder. Drop it into your world's <code>datapacks/</code>, <code>/reload</code>, and start a match.</p>
+    <div class="closing-cta">
+      <a class="btn btn-primary" href="https://github.com/kennethteh90/blockwatch-siege/releases/latest">▼ Download v0.1.0</a>
+      <a class="btn btn-secondary" href="install.html">Install guide</a>
+      <a class="btn btn-secondary" href="how-to-play.html">How to play</a>
+    </div>
+    <p class="small">Java Edition only · pack_format 26 · 1–4 players co-op</p>
+  </div>
+</section>
+
+<!-- footer -->
+<footer>
+  <div class="wrap">
+    <p>BLOCKWATCH: SIEGE · v0.1.0 · made for friends &amp; flat worlds</p>
+    <div class="foot-links">
+      <a href="https://github.com/kennethteh90/blockwatch-siege">GitHub</a>
+      <a href="https://github.com/kennethteh90/blockwatch-siege/releases">Releases</a>
+      <a href="install.html">Install</a>
+      <a href="how-to-play.html">Play</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // tower card expand/collapse
+  document.querySelectorAll('[data-tower]').forEach(card => {
+    card.addEventListener('click', () => {
+      card.classList.toggle('is-open');
+    });
+  });
+</script>
+
+</body>
+</html>
