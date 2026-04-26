@@ -131,6 +131,10 @@ The datapack is co-op compatible. Each player has their own spendable `bw.gold` 
 
 Players online when `/function blockwatch:state/new_match` is run are tagged as the participants for that match. Late joiners can watch, but they do not receive match gold, triggers, or HUD updates until the next match starts.
 
+Shared castle HP also scales from that participant count:
+- 1 player: `#castle.max`
+- each extra participant adds `#castle.per_player`
+
 For multiplayer servers, ensure all players have operator level ≥ 2 if you want them to use debug functions, or restrict debug access by removing the `debug/` functions from the datapack before distribution.
 
 ---

@@ -38,4 +38,4 @@ Players cannot build or sell during combat (state 3). The sell trigger is only e
 
 ## 9. No per-player castle HP in co-op
 
-Castle HP is a single shared counter (`#castle_hp bw.castle_hp`). A 4-player co-op game has the same castle HP as a solo game. Increase `#castle.max bw.cfg` to compensate for larger player counts.
+Castle HP is a single shared counter (`#castle_hp bw.castle_hp`). It now scales by participant count at match start, but it is still not individualized per player.

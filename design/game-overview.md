@@ -85,7 +85,7 @@ new_match
 
 ## Player Count
 
-1–4 players cooperative. Each player keeps their own gold balance, but kill rewards and intermission payouts are granted equally to current match participants only. Castle HP is shared. For larger groups increase `#castle.max bw.cfg`.
+1–4 players cooperative. Each player keeps their own gold balance, but kill rewards and intermission payouts are granted equally to current match participants only. Castle HP is shared and scales with participant count at match start.
 
 ## Map Requirements
 

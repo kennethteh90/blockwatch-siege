@@ -45,6 +45,8 @@ scoreboard players set #t.endgame    bw.cfg 200
 # Starting values
 scoreboard players set #gold.start   bw.cfg 100
 scoreboard players set #castle.max   bw.cfg 20
+# Extra shared castle HP per additional participant after the first
+scoreboard players set #castle.per_player bw.cfg 10
 
 # Between-wave gold: base + (reward.wave * wave_number)
 scoreboard players set #reward.base  bw.cfg 25
