@@ -6,7 +6,7 @@
 #   999999       : header (static)
 #   100001–100010: Wave  (100000 + wave number)
 #    50001–50020 : Castle HP (50000 + current hp)
-#        0–9999  : per-player Gold (raw bw.gold value)
+#        0–9999  : team Gold (raw #gold bw.gold value)
 #
 # This keeps labels stable even when the underlying values change.
 
@@ -21,6 +21,5 @@ scoreboard players add       "§eWave" bw.board  100000
 scoreboard players operation "§cCastle HP" bw.board  = #castle_hp bw.castle_hp
 scoreboard players add       "§cCastle HP" bw.board  50000
 
-# ── Per-player Gold (band: 0–9999) ───────────────────────────────────────────
-# Each player's name appears with their gold score. Sorted among themselves.
-execute as @a[tag=bw.playing] run scoreboard players operation @s bw.board = @s bw.gold
+# ── Team Gold (band: 0–9999) ──────────────────────────────────────────────────
+scoreboard players operation "§6Team Gold" bw.board = #gold bw.gold

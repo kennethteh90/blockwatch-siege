@@ -117,7 +117,7 @@ These values ARE tuneable without editing mcfunction files — change them in `s
 | Build phase | `#t.build` | 600 ticks (30 s) | Build window duration |
 | Intermission | `#t.intermiss` | 200 ticks (10 s) | Rest between waves |
 | End screen | `#t.endgame` | 200 ticks (10 s) | Victory/defeat display time |
-| Starting gold | `#gold.start` | 100g | Gold each player starts with |
+| Starting gold | `#gold.start` | 100g | Starting amount for the shared team bank |
 | Castle HP | `#castle.max` | 20 | Base shared castle hit points |
 | Extra HP / player | `#castle.per_player` | 10 | Added for each participant after the first |
 | Base reward | `#reward.base` | 25g | Gold awarded each intermission |

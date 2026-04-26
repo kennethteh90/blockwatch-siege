@@ -12,5 +12,5 @@ execute as @e[tag=bw.init,limit=1] run scoreboard players set @s bw.tower_level 
 execute as @e[tag=bw.init,limit=1] run scoreboard players set @s bw.cd          0
 tag @e[tag=bw.init] remove bw.init
 
-scoreboard players operation @a[tag=bw.placing,limit=1] bw.gold -= #cost.arrow bw.cfg
-tellraw @a[tag=bw.placing,limit=1] [{"text":"[Siege] ","color":"gold"},{"text":"Arrow Tower placed! (-50g)  Range 8  DMG 5  Rate 1s","color":"aqua"}]
+scoreboard players operation #gold bw.gold -= #cost.arrow bw.cfg
+tellraw @a[tag=bw.placing,limit=1] [{"text":"[Siege] ","color":"gold"},{"text":"Arrow Tower placed! (-50g team gold)  Range 8  DMG 5  Rate 1s","color":"aqua"}]

@@ -68,7 +68,7 @@ new_match
 | `bw.wave`      | Current wave number                              |
 | `bw.castle_hp` | Remaining castle HP (`#castle_hp`)               |
 | `bw.timer`     | Countdown ticks for phase durations              |
-| `bw.gold`      | Per-player gold balance                          |
+| `bw.gold`      | Shared team gold bank (`#gold`)                  |
 | `bw.cfg`       | All gameplay constants (fake players)            |
 | `bw.tmp`       | Scratch space: spawner state, leak counter       |
 | `bw.place`     | Trigger: place tower (1=Arrow, 2=Frost, 3=Bomb)  |
@@ -85,7 +85,7 @@ new_match
 
 ## Player Count
 
-1–4 players cooperative. Each player keeps their own gold balance, but kill rewards and intermission payouts are granted equally to current match participants only. Castle HP is shared and scales with participant count at match start.
+1–4 players cooperative. Current match participants share one gold bank for all tower spending and rewards. Castle HP is shared and scales with participant count at match start.
 
 ## Map Requirements
 
