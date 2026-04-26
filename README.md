@@ -56,7 +56,7 @@ blockwatch-siege/
 | `bw.state`     | `#state` 0–6                         | FSM state                 |
 | `bw.wave`      | `#wave`                              | Current wave number       |
 | `bw.castle_hp` | `#castle_hp`                         | Remaining castle HP       |
-| `bw.gold`      | per-player                           | Player gold               |
+| `bw.gold`      | `#gold`                              | Shared team gold bank     |
 | `bw.cfg`       | `#waves.max`, `#cost.arrow`, etc.    | All gameplay constants    |
 | `bw.tmp`       | `#sp_idx`, `#sp_done`, etc.          | Spawner scratch space     |
 | `bw.place`     | trigger (1=Arrow, 2=Frost, 3=Bomb)   | Place tower               |
@@ -98,8 +98,8 @@ to a custom map. See `design/map-customization.md` and `design/placeholders.md`.
 All gameplay constants (costs, timers, wave count) live in `state/setup_scoreboards.mcfunction`
 under the `bw.cfg` section.
 
-Players spend from their own `bw.gold` balances. Kill rewards and intermission payouts are granted
-equally to current match participants only.
+Players spend from one shared `#gold` bank for the active match. Kill rewards, sell refunds, and
+intermission payouts all flow into that same team bank.
 
 Shared castle HP scales with participant count at match start:
 `#castle.max + (#players - 1) * #castle.per_player`

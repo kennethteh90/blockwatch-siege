@@ -17,7 +17,7 @@ scoreboard players set #sp_done    bw.tmp       0
 scoreboard players set #sp_lane    bw.tmp       1
 scoreboard players set #wave_leaks bw.tmp       0
 scoreboard players set #ui_tick    bw.tmp       0
-scoreboard players set @a bw.gold          0
+scoreboard players set #gold bw.gold       0
 scoreboard players set @a bw.airstrike_cd  0
 scoreboard players set @a bw.freeze_cd     0
 scoreboard players reset @a bw.board

@@ -22,7 +22,7 @@ Arrow and Frost towers fire at `sort=nearest,limit=1`. They cannot hit multiple 
 
 ## 5. Co-op gold awards all players equally
 
-Kill rewards and intermission payouts are mirrored to all current match participants. There is still no contribution tracking or split-by-kill gold.
+The shared bank has no contribution tracking, reservation system, or spending permissions. Any active participant can spend the team's gold immediately.
 
 ## 6. Frozen flag on dead entities
 

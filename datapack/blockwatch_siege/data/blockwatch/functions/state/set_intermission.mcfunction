@@ -9,10 +9,10 @@ scoreboard players operation #timer bw.timer = #t.intermiss bw.cfg
 scoreboard players operation #tmp bw.tmp  = #wave bw.wave
 scoreboard players operation #tmp bw.tmp  *= #reward.wave bw.cfg
 scoreboard players operation #tmp bw.tmp  += #reward.base bw.cfg
-scoreboard players operation @a[tag=bw.playing] bw.gold += #tmp bw.tmp
+scoreboard players operation #gold bw.gold += #tmp bw.tmp
 
 # Flawless bonus: no enemies leaked this wave
-execute if score #wave_leaks bw.tmp matches 0 run scoreboard players operation @a[tag=bw.playing] bw.gold += #reward.bonus bw.cfg
+execute if score #wave_leaks bw.tmp matches 0 run scoreboard players operation #gold bw.gold += #reward.bonus bw.cfg
 execute if score #wave_leaks bw.tmp matches 0 run tellraw @a[tag=bw.playing] [{"text":"[Siege] ","color":"gold"},{"text":"FLAWLESS! +50g bonus — no leaks!","color":"aqua","bold":true}]
 execute unless score #wave_leaks bw.tmp matches 0 run tellraw @a[tag=bw.playing] [{"text":"[Siege] ","color":"gold"},{"text":"Wave cleared! Gold bonus awarded.","color":"green"}]
 
