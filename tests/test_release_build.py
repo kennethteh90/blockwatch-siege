@@ -31,16 +31,21 @@ class ReleaseBuild(unittest.TestCase):
             with zipfile.ZipFile(archive) as zf:
                 names = set(zf.namelist())
 
+            # pack.mcmeta must be at the zip root (not inside a subfolder)
+            # so Minecraft can load the zip directly from datapacks/
             self.assertIn(
+                "pack.mcmeta",
+                names,
+                "release archive is missing pack.mcmeta at root",
+            )
+            self.assertNotIn(
                 "blockwatch_siege/pack.mcmeta",
                 names,
-                "release archive is missing pack.mcmeta",
+                "pack.mcmeta is nested under blockwatch_siege/ — Minecraft won't load it",
             )
             self.assertFalse(
                 any(
-                    name.startswith(
-                        "blockwatch_siege/data/blockwatch/functions/debug/"
-                    )
+                    name.startswith("data/blockwatch/functions/debug/")
                     for name in names
                 ),
                 "release archive should not include debug functions",

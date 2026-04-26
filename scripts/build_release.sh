@@ -19,9 +19,11 @@ rm -f "$archive_path"
 cp -R "$src_dir" "$stage_dir/blockwatch_siege"
 rm -rf "$stage_dir/blockwatch_siege/data/blockwatch/functions/debug"
 
+# cd into the staged datapack so pack.mcmeta lands at the zip root,
+# not nested under blockwatch_siege/ (Minecraft requires it at root for zip datapacks)
 (
-  cd "$stage_dir"
-  python3 -m zipfile -c "$archive_path" blockwatch_siege
+  cd "$stage_dir/blockwatch_siege"
+  python3 -m zipfile -c "$archive_path" pack.mcmeta data
 )
 
 echo "Built release archive: $archive_path"
