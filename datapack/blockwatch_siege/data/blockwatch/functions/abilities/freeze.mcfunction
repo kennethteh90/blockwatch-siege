@@ -10,4 +10,4 @@ execute as @e[tag=bw.enemy] if score @s bw.hp matches 1.. run scoreboard players
 
 scoreboard players operation @s bw.freeze_cd = #cd.freeze bw.cfg
 particle minecraft:snowflake ~ ~1 ~ 5 1 5 0.1 100 force
-tellraw @a [{"text":"[Siege] ","color":"gold"},{"text":"Freeze burst! ","color":"aqua","bold":true},{"text":"All enemies frozen for 5s.","color":"aqua"}]
+tellraw @a[tag=bw.playing] [{"text":"[Siege] ","color":"gold"},{"text":"Freeze burst! ","color":"aqua","bold":true},{"text":"All enemies frozen for 5s.","color":"aqua"}]

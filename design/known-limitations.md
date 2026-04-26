@@ -22,7 +22,7 @@ Arrow and Frost towers fire at `sort=nearest,limit=1`. They cannot hit multiple 
 
 ## 5. Co-op gold awards all players equally
 
-`scoreboard players operation @a bw.gold += #tmp bw.tmp` gives every online player the same reward. There is no contribution tracking or split-by-kill gold.
+Kill rewards and intermission payouts are mirrored to all current match participants. There is still no contribution tracking or split-by-kill gold.
 
 ## 6. Frozen flag on dead entities
 

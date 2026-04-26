@@ -127,7 +127,9 @@ Key files to update for a new map:
 
 ## Multiplayer Setup
 
-The datapack is co-op compatible. Each player has their own spendable `bw.gold` balance, but kill rewards and intermission payouts are mirrored to every online player. Castle HP and wave state are global.
+The datapack is co-op compatible. Each player has their own spendable `bw.gold` balance, but kill rewards and intermission payouts are mirrored to active match participants only. Castle HP and wave state are global.
+
+Players online when `/function blockwatch:state/new_match` is run are tagged as the participants for that match. Late joiners can watch, but they do not receive match gold, triggers, or HUD updates until the next match starts.
 
 For multiplayer servers, ensure all players have operator level ≥ 2 if you want them to use debug functions, or restrict debug access by removing the `debug/` functions from the datapack before distribution.
 

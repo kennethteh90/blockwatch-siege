@@ -23,4 +23,4 @@ scoreboard players add       "§cCastle HP" bw.board  50000
 
 # ── Per-player Gold (band: 0–9999) ───────────────────────────────────────────
 # Each player's name appears with their gold score. Sorted among themselves.
-execute as @a run scoreboard players operation @s bw.board = @s bw.gold
+execute as @a[tag=bw.playing] run scoreboard players operation @s bw.board = @s bw.gold

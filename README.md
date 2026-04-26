@@ -74,6 +74,7 @@ blockwatch-siege/
 | `bw.tower.bomb` | Armor stand  | Bomb Tower               |
 | `bw.pad`        | Armor stands | Build pad markers        |
 | `bw.occupied`   | Pad stands   | Pad with a tower on it   |
+| `bw.playing`    | Players      | Active participants in the current match |
 
 ## Tower Quick Reference
 
@@ -97,4 +98,4 @@ All gameplay constants (costs, timers, wave count) live in `state/setup_scoreboa
 under the `bw.cfg` section.
 
 Players spend from their own `bw.gold` balances. Kill rewards and intermission payouts are granted
-equally to every online player.
+equally to current match participants only.
