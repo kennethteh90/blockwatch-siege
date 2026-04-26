@@ -60,6 +60,8 @@ blockwatch-siege/
 | `bw.tmp`       | `#sp_idx`, `#sp_done`, etc.          | Spawner scratch space     |
 | `bw.place`     | trigger (1=Arrow, 2=Frost, 3=Bomb)   | Place tower               |
 | `bw.sell`      | trigger (value 1)                    | Sell nearest tower        |
+| `bw.upgrade`   | trigger (value 1)                    | Upgrade nearest tower     |
+| `bw.ability`   | trigger (1=Airstrike, 2=Freeze)      | Use combat ability        |
 
 ## Entity Tags (all `bw.*`)
 
@@ -93,3 +95,6 @@ to a custom map. See `design/map-customization.md` and `design/placeholders.md`.
 
 All gameplay constants (costs, timers, wave count) live in `state/setup_scoreboards.mcfunction`
 under the `bw.cfg` section.
+
+Players spend from their own `bw.gold` balances. Kill rewards and intermission payouts are granted
+equally to every online player.

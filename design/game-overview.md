@@ -74,7 +74,7 @@ new_match
 | `bw.place`     | Trigger: place tower (1=Arrow, 2=Frost, 3=Bomb)  |
 | `bw.sell`      | Trigger: sell nearest tower (value 1)            |
 | `bw.tower_type`| Tower identity score (1/2/3)                    |
-| `bw.tower_level`| Tower upgrade level (currently 1 only)          |
+| `bw.tower_level`| Tower upgrade level (1-3)                       |
 | `bw.enemy_type`| Enemy identity (1=Walker, 2=Runner, 3=Brute, 4=Boss)|
 | `bw.lane`      | Enemy lane assignment (1 or 2)                   |
 | `bw.wp`        | Enemy current waypoint (1-4)                     |
@@ -85,7 +85,7 @@ new_match
 
 ## Player Count
 
-1–4 players cooperative. Gold is awarded equally per player. Castle HP is shared. For larger groups increase `#castle.max bw.cfg`.
+1–4 players cooperative. Each player keeps their own gold balance, but kill rewards and intermission payouts are granted equally to all online players. Castle HP is shared. For larger groups increase `#castle.max bw.cfg`.
 
 ## Map Requirements
 

@@ -60,4 +60,4 @@ The sold tower's pad has its name label visibility restored so the pad is availa
 - `bw.tower_type` score: 1=Arrow, 2=Frost, 3=Bomb
 - Attack dispatch: `towers/tick` iterates by tag, calls `<type>/tick` → `<type>/attack` → `<type>/hit`
 - Rate control: `bw.cd` score decrements each tick; resets to `#rate.<type> bw.cfg` on fire
-- No upgrades implemented (single tier per type)
+- Towers upgrade from level 1 to level 3 via `towers/do_upgrade_l2.mcfunction` and `towers/do_upgrade_l3.mcfunction`
