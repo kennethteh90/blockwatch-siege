@@ -36,10 +36,6 @@ Players cannot build or sell during combat (state 3). The sell trigger is only e
 
 `enemies/spawn/boss.mcfunction` hard-codes lane 1 and ignores `#sp_lane bw.tmp`. This is intentional (boss is a lane 1 threat), but means dual-lane maps cannot direct the boss to lane 2 without editing the file.
 
-## 9. Wave token item has no gameplay function
-
-The nether star given by `state/new_match` serves as a visual token only — it does not trigger wave start. Wave timing is controlled entirely by scoreboards. The item can be discarded without consequence.
-
-## 10. No per-player castle HP in co-op
+## 9. No per-player castle HP in co-op
 
 Castle HP is a single shared counter (`#castle_hp bw.castle_hp`). A 4-player co-op game has the same castle HP as a solo game. Increase `#castle.max bw.cfg` to compensate for larger player counts.
