@@ -9,7 +9,7 @@ function blockwatch:map/setup
 scoreboard players set #wave     bw.wave  1
 scoreboard players set #timer    bw.timer 0
 
-scoreboard players operation @a[tag=bw.playing] bw.gold = #gold.start bw.cfg
+scoreboard players operation #gold bw.gold = #gold.start bw.cfg
 
 # Shared castle HP scales by match size: base HP + bonus per extra participant.
 scoreboard players set #players bw.tmp 0
@@ -24,6 +24,8 @@ tellraw @a[tag=bw.playing] [
   {"text":"[Siege] ","color":"gold"},
   {"text":"Participants: ","color":"gray"},
   {"score":{"name":"#players","objective":"bw.tmp"},"color":"yellow"},
+  {"text":"  Team Gold: ","color":"gray"},
+  {"score":{"name":"#gold","objective":"bw.gold"},"color":"gold"},
   {"text":"  Castle HP: ","color":"gray"},
   {"score":{"name":"#castle_hp","objective":"bw.castle_hp"},"color":"green"}
 ]

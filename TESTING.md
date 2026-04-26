@@ -36,7 +36,7 @@ Expected:
 ```
 Expected:
 - State transitions: new_match → set_build → state 2
-- Each player starts with 100 gold (`bw.gold`)
+- Team bank starts with 100 gold (`#gold bw.gold`)
 - `#castle_hp = 20`
 - `#timer` ≈ 600 (30 s countdown begins)
 - 8 pad armor stands visible in world (4 per lane)
@@ -60,7 +60,7 @@ Expected:
 /trigger bw.place set 2    (near a different pad, costs 75g)
 /trigger bw.place set 3    (near a third pad, costs 100g)
 ```
-Expected gold sequence starting from 50g: 50 → -25g (blocked, insufficient funds if broke).  
+Expected team-gold sequence starting from 50g: 50 → -25g (blocked, insufficient funds if broke).
 Use `/function blockwatch:debug/give_gold` first if needed to top up to 150g.
 
 ### 5. Sell a Tower
@@ -158,7 +158,7 @@ Display a scoreboard in-game to watch scores live:
 ```
 /scoreboard objectives setdisplay sidebar bw.state
 /scoreboard objectives setdisplay sidebar bw.tmp
-/scoreboard objectives setdisplay sidebar bw.gold
+/scoreboard players get #gold bw.gold
 ```
 
 Reset display:
@@ -193,7 +193,7 @@ Useful fake-player reads:
 **Gold not deducting / tower not placed**
 - Confirm you are within 4 blocks of an unoccupied pad.
 - Confirm the trigger was enabled this tick (state must be 2 or 4 for sell; state 2 for place).
-- Check gold balance: `/scoreboard players get @s bw.gold`
+- Check team bank: `/scoreboard players get #gold bw.gold`
 
 **Enemies not moving**
 - Confirm `bw.lane` is set on the entity. A missing lane score causes `enemies/move` to skip both lane branches silently.

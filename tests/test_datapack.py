@@ -126,28 +126,33 @@ class WaveCoverage(unittest.TestCase):
 
 
 class ParticipantScoping(unittest.TestCase):
-    def test_global_gold_operations_are_scoped_to_match_participants(self):
-        allowed_tags = ("bw.playing", "bw.placing", "bw.selling", "bw.upgrading")
-        allowed_paths = {FUNCTIONS_ROOT / "state" / "reset_match.mcfunction"}
+    def test_gold_operations_use_shared_bank(self):
+        allowed_paths = {
+            FUNCTIONS_ROOT / "debug" / "give_gold.mcfunction",
+            FUNCTIONS_ROOT / "state" / "new_match.mcfunction",
+            FUNCTIONS_ROOT / "state" / "reset_match.mcfunction",
+            FUNCTIONS_ROOT / "state" / "setup_scoreboards.mcfunction",
+            FUNCTIONS_ROOT / "debug" / "status.mcfunction",
+        }
         failures = []
 
         for path, lineno, line in _mcfunction_lines():
-            if "@a" not in line or "bw.gold" not in line:
+            if "bw.gold" not in line:
                 continue
 
             if path in allowed_paths:
                 continue
 
-            if any(f"tag={tag}" in line for tag in allowed_tags):
+            if "#gold bw.gold" in line:
                 continue
 
             failures.append(
                 f"  {path.relative_to(FUNCTIONS_ROOT)}:{lineno}: "
-                f"gold-affecting selector is not scoped to an approved player tag"
+                f"gold-affecting logic should use the shared #gold bank"
             )
 
         if failures:
-            self.fail("Unscoped gold selectors:\n" + "\n".join(failures))
+            self.fail("Non-shared-bank gold usage:\n" + "\n".join(failures))
 
     def test_player_count_scaling_is_configured(self):
         setup_text = SETUP_BOARDS.read_text()
